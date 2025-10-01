@@ -155,6 +155,8 @@ void vertimas(vector<int> dalys)
             dalys[i] = dalys[i] * 10;
         }
     }
+    for (int i = 0; i < 8; i++)
+        dalys[i] ^= (dalys[(i + 1) % 8] >> (i + 3));
 
     string ats = "";
     for (int i = 0; i < 8; i++)

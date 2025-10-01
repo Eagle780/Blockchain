@@ -81,8 +81,19 @@ Toliau pateikiamas pseudo-kodas, aprašantis pagrindinius hash'o skaičiavimo et
                     ats += tekstas[j]
         return ats
 
-
 Norint įvertinti kodo efektyvumą, buvo atliekami eksperimentai.
 
 ## Eksperimentai
 
+Buvo testuojami 4 failai:
+
+- failas su vienu simboliu (test1),
+- failas su daug (>1000) simbolių (test2),
+- failas, kuris nuo praeito skiriasi vienu simboliu (test3),
+- tuščias failas (test4).
+
+Visi gauti hash'ai:
+test1 - f7339434a9366000d404600081596000a93660007018900097036000d7146000
+test2 - f991e759a892c684d015a595933064557505f980f017e46886829180d588d159
+test3 - e1979800f2947012b172b180c168d051b423a018d9458024e54775799467c818
+test4 - 97026000a9366000d404600081596000a93660007018900097036000d7146000

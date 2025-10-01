@@ -124,12 +124,6 @@ int sudeti(string pirmas, string antras)
 
 void vertimas(vector<int> dalys)
 {
-
-    for (int i = 0; i < 8; i++)
-    {
-        cout << dalys[i] << endl;
-    }
-
     for (int i = 0; i < 4; i++)
     {
         dalys[i] += i * 1234;
@@ -151,19 +145,47 @@ void vertimas(vector<int> dalys)
     }
     for (int i = 0; i < 8; i++)
     {
-        if (dalys[i] / 100000000 >= 1)
+        while (dalys[i] / 100000000 >= 1)
         {
             dalys[i] = dalys[i] % 100000000;
         }
-        if (dalys[i] / 10000000 == 0)
+        while (dalys[i] / 10000000 == 0)
         {
             dalys[i] = dalys[i] * 10;
         }
     }
-    cout << "---" << endl;
+
     string ats = "";
     for (int i = 0; i < 8; i++)
     {
         cout << dalys[i] << endl;
+        string dalis = to_string(dalys[i]);
+        for (int j = 0; j < 8; j++)
+        {
+            if (j % 4 == 0)
+            {
+                int num = int(dalis[j]) - 48 + 6;
+                if (num == 10)
+                    ats.append("a");
+                else if (num == 11)
+                    ats.append("b");
+                else if (num == 12)
+                    ats.append("c");
+                else if (num == 13)
+                    ats.append("d");
+                else if (num == 14)
+                    ats.append("e");
+                else if (num == 15)
+                    ats.append("f");
+                else
+                    ats.append(to_string(num));
+            }
+            else
+            {
+                ats.append(to_string(dalis[j] - 48));
+            }
+        }
     }
+    cout << ats << endl;
+    cout << "ilgis: " << ats.length() << endl;
 }

@@ -131,11 +131,12 @@ void vertimas(vector<int> dalys)
     }
     for (int i = 0; i < 4; i++)
     {
-        dalys[i] += dalys[3];
-        dalys[i + 4] += dalys[7];
+        dalys[i] += dalys[1];
+        dalys[i + 4] += dalys[4];
     }
     for (int i = 0; i < 8; i++)
     {
+        dalys[i] += dalys[1];
         dalys[i] = dalys[i] / (i % 4 + 1);
     }
     for (int i = 0; i < 8; i++)
@@ -158,7 +159,6 @@ void vertimas(vector<int> dalys)
     string ats = "";
     for (int i = 0; i < 8; i++)
     {
-        cout << dalys[i] << endl;
         string dalis = to_string(dalys[i]);
         for (int j = 0; j < 8; j++)
         {

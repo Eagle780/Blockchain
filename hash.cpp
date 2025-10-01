@@ -8,7 +8,7 @@ using namespace std;
 
 string skaitytiFaila(string failas);
 string konvertuotiASCII(string tekstas);
-vector<string> paversti64(string tekstasASCII);
+vector<int> paversti64(string tekstasASCII);
 int sudeti(string pirmas, string antras);
 
 int main(int argc, char **argv)
@@ -30,23 +30,68 @@ int main(int argc, char **argv)
         getline(cin, a);
         tekstas = a;
     }
-    cout << tekstas << endl;
+
     string tekstasASCII = konvertuotiASCII(tekstas);
-    cout << tekstasASCII << endl;
 
-    /*
-    string binary = bitset<4>(15).to_string(); // to binary
-    cout << binary << "\n";
-
-    unsigned long decimal = bitset<4>(binary).to_ulong();
-    cout << decimal << "\n";
-    */
-
-    cout << tekstasASCII.length() << endl;
-
-    vector<string> dalys = paversti64(tekstasASCII);
+    vector<int> dalys = paversti64(tekstasASCII);
 
     cout << "daliu skaicius: " << dalys.size() << endl;
+    for (int i = 0; i < dalys.size(); i++)
+    {
+        cout << dalys[i] << endl;
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        dalys[i] += dalys[1];
+        dalys[i + 4] += dalys[4];
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        dalys[i] += dalys[3];
+        dalys[i + 4] += dalys[7];
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        dalys[i] = dalys[i] / (i % 4 + 1);
+        cout << "prie dalybos: " << dalys[i] << endl;
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        dalys[i] = dalys[i] * (i % 3 + 1);
+        dalys[i] += dalys[i] / 10000;
+    }
+    for (int i = 0; i < dalys.size(); i++)
+    {
+        if (dalys[i] / 100000000 >= 1)
+        {
+            dalys[i] = dalys[i] % 100000000;
+        }
+        if (dalys[i] / 10000000 == 0)
+        {
+            dalys[i] = dalys[i] * 10;
+        }
+    }
+    cout << "---" << endl;
+    for (int i = 0; i < dalys.size(); i++)
+    {
+        cout << dalys[i] << endl;
+    }
+
+    vector<string> binarus;
+    for (int i = 0; i < dalys.size(); i++)
+    {
+        string binary = "";
+        for (int j = 0; j < 8; j++)
+        {
+            string bi = bitset<4>(to_string(dalys[i])[j]).to_string();
+            binary.append(bi);
+        }
+        binarus.push_back(binary);
+        cout << binary << endl;
+    }
+    cout << "hello?" << endl;
+
     return 0;
 }
 
@@ -75,7 +120,7 @@ string konvertuotiASCII(string tekstas)
     return tekstasASCII;
 }
 
-vector<string> paversti64(string tekstasASCII)
+vector<int> paversti64(string tekstasASCII)
 {
     vector<string> dalys;
     if (tekstasASCII.length() % 8 != 0)
@@ -103,13 +148,19 @@ vector<string> paversti64(string tekstasASCII)
         for (int i = 0; i < skir; i++)
             dalys.pop_back();
     }
-
-    for (int i = 0; i < dalys.size(); i++)
+    else if (dalys.size() < 8)
     {
-        cout << dalys[i] << endl;
+        int skir = 8 - dalys.size();
+        for (int i = 0; i < skir; i++)
+        {
+            dalys.push_back("00000000");
+        }
     }
 
-    return dalys;
+    vector<int> dalysint;
+    for (int i = 0; i < dalys.size(); i++)
+        dalysint.push_back(stoi(dalys[i]));
+    return dalysint;
 }
 
 int sudeti(string pirmas, string antras)

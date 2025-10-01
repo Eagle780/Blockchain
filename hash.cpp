@@ -1,17 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <bitset>
 
 using namespace std;
 
-void skaitytiFaila(string failas);
+string skaitytiFaila(string failas);
+string konvertuotiASCII(string tekstas);
 
 int main(int argc, char **argv)
 {
+    string tekstas = "";
     if (argc == 2)
     {
         string failas = argv[1];
-        skaitytiFaila(failas);
+        tekstas = skaitytiFaila(failas);
     }
     else if (argc > 3)
     {
@@ -22,19 +25,36 @@ int main(int argc, char **argv)
         string a;
         cout << "iveskite teksta, kuri norite uzsifruoti:" << endl;
         getline(cin, a);
-        cout << a << endl;
+        tekstas = a;
     }
+    cout << tekstas << endl;
+    string tekstasASCII = konvertuotiASCII(tekstas);
+    cout << tekstasASCII << endl;
+
     return 0;
 }
 
-void skaitytiFaila(string failas)
+string skaitytiFaila(string failas)
 {
     ifstream fd(failas);
+    string tekstas = "";
     string eilute;
     while (getline(fd, eilute))
     {
-        cout << eilute << " ";
+        tekstas.append(eilute);
+        tekstas.append(" ");
     }
-    cout << endl;
     fd.close();
+    return tekstas;
+}
+
+string konvertuotiASCII(string tekstas)
+{
+    string tekstasASCII = "";
+    for (int i = 0; i < tekstas.length(); i++)
+    {
+        char x = tekstas.at(i);
+        tekstasASCII.append(to_string(int(x)));
+    }
+    return tekstasASCII;
 }

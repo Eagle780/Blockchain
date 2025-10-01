@@ -10,6 +10,7 @@ string skaitytiFaila(string failas);
 string konvertuotiASCII(string tekstas);
 vector<int> paversti64(string tekstasASCII);
 int sudeti(string pirmas, string antras);
+void vertimas(vector<int> dalys);
 
 int main(int argc, char **argv)
 {
@@ -30,67 +31,11 @@ int main(int argc, char **argv)
         getline(cin, a);
         tekstas = a;
     }
-
     string tekstasASCII = konvertuotiASCII(tekstas);
 
     vector<int> dalys = paversti64(tekstasASCII);
 
-    cout << "daliu skaicius: " << dalys.size() << endl;
-    for (int i = 0; i < dalys.size(); i++)
-    {
-        cout << dalys[i] << endl;
-    }
-
-    for (int i = 0; i < 4; i++)
-    {
-        dalys[i] += dalys[1];
-        dalys[i + 4] += dalys[4];
-    }
-    for (int i = 0; i < 4; i++)
-    {
-        dalys[i] += dalys[3];
-        dalys[i + 4] += dalys[7];
-    }
-    for (int i = 0; i < 8; i++)
-    {
-        dalys[i] = dalys[i] / (i % 4 + 1);
-        cout << "prie dalybos: " << dalys[i] << endl;
-    }
-    for (int i = 0; i < 8; i++)
-    {
-        dalys[i] = dalys[i] * (i % 3 + 1);
-        dalys[i] += dalys[i] / 10000;
-    }
-    for (int i = 0; i < dalys.size(); i++)
-    {
-        if (dalys[i] / 100000000 >= 1)
-        {
-            dalys[i] = dalys[i] % 100000000;
-        }
-        if (dalys[i] / 10000000 == 0)
-        {
-            dalys[i] = dalys[i] * 10;
-        }
-    }
-    cout << "---" << endl;
-    for (int i = 0; i < dalys.size(); i++)
-    {
-        cout << dalys[i] << endl;
-    }
-
-    vector<string> binarus;
-    for (int i = 0; i < dalys.size(); i++)
-    {
-        string binary = "";
-        for (int j = 0; j < 8; j++)
-        {
-            string bi = bitset<4>(to_string(dalys[i])[j]).to_string();
-            binary.append(bi);
-        }
-        binarus.push_back(binary);
-        cout << binary << endl;
-    }
-    cout << "hello?" << endl;
+    vertimas(dalys);
 
     return 0;
 }
@@ -144,6 +89,11 @@ vector<int> paversti64(string tekstasASCII)
             int sum = sudeti(dalys[i], dalys[i + 8]);
             string naujas = to_string(sum);
             dalys[i] = naujas;
+            if (i == 7)
+            {
+                skir -= 8;
+                i == 0;
+            }
         }
         for (int i = 0; i < skir; i++)
             dalys.pop_back();
@@ -170,4 +120,50 @@ int sudeti(string pirmas, string antras)
         sum = sum % 100000000;
 
     return sum;
+}
+
+void vertimas(vector<int> dalys)
+{
+
+    for (int i = 0; i < 8; i++)
+    {
+        cout << dalys[i] << endl;
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        dalys[i] += i * 1234;
+        dalys[i + 4] += i * 4321;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        dalys[i] += dalys[3];
+        dalys[i + 4] += dalys[7];
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        dalys[i] = dalys[i] / (i % 4 + 1);
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        dalys[i] = dalys[i] * (i % 3 + 1);
+        dalys[i] += dalys[i] / 10000;
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        if (dalys[i] / 100000000 >= 1)
+        {
+            dalys[i] = dalys[i] % 100000000;
+        }
+        if (dalys[i] / 10000000 == 0)
+        {
+            dalys[i] = dalys[i] * 10;
+        }
+    }
+    cout << "---" << endl;
+    string ats = "";
+    for (int i = 0; i < 8; i++)
+    {
+        cout << dalys[i] << endl;
+    }
 }

@@ -115,32 +115,26 @@ Buvo testuojami 4 failai:
 
 Visi gauti hash'ai (rašant ranka):
 
-test1 -> hash: f3587667a5157493d378b3648104a834b005b2807038c5409704d270d742f444
-
-test2 -> hash: f5029677a4597276c93164769352a7117566c284f02885588693d693d579f315
-
-test3 -> hash: d258d027f6179573b086c372c092b973b3676763d9259401e553e9159461d327
-
-test4 -> hash: a0557569a5598650d36377918114b714a928f7657004e6409717c656d7177145
+test1 - e1186393c873a325d192f668a402e337a6366579c0018749b790e597e654f095
+test2 - 7148c511c689e862b137d197f0927939b87980379392b515f710c212d9059817
+test3 - a6538216a242e2089198c687c046a631e005e925a745f9759970b549e7887010
+test4 - f724a466c960e5708445c429d894f126c1459821b639c8997027b467c551e837
 
 Visi gauti hash'ai (naudojant ChatGPT):
 
-text1.txt file -> hash: 333b032039bef039c6eb417c030c56591c782cd18c98698d18446fc3f02a7f93
-
-text2.txt file -> hash: 32ab04ab717ca70af359dd70eb7f4b3a38860b6f065b290238d36667ec01e47b
-
-konstitucija.txt file -> hash: a68b86f57c42b9321bcbcc80c26ede09627675aa827b67b68fe4fdd06f2181fa
-
-text3.txt file -> hash: cb1719b3fd6c50651a7d15513aed34a03ea506b14d461a642c8d0ac9fb49784f
+text1 - 333b032039bef039c6eb417c030c56591c782cd18c98698d18446fc3f02a7f93
+text2 - 32ab04ab717ca70af359dd70eb7f4b3a38860b6f065b290238d36667ec01e47b
+konstitucija - a68b86f57c42b9321bcbcc80c26ede09627675aa827b67b68fe4fdd06f2181fa
+text3 - cb1719b3fd6c50651a7d15513aed34a03ea506b14d461a642c8d0ac9fb49784f
 
 Kaip galima pastebėti žiūrint į hash'us, jie visi yra vienodo (64 simbolių) ilgio ir jie visi yra kardinaliai skirtingi.
 Paleidus programą kelisi kartus ir naudojant tuos pačius failus, gaunami hash'ai nesiskiria.
 
 Ekperimentai taip pat buvo atliekami su konstitucija.txt failu, iš jo paimant pasirinktą skaičių eilučių:
 
-| eilutės    | 1         | 10        | 100       | 700       |
-| ---------- | --------- | --------- | --------- | --------- |
-| laikas (s) | 0.0003846 | 0.0004841 | 0.0011514 | 0.0081529 |
+| eilutės    | 1         | 10        | 100       | 700      |
+| ---------- | --------- | --------- | --------- | -------- |
+| laikas (s) | 0.0003846 | 0.0004841 | 0.0107177 | 0.846561 |
 
 Kuriant skirtingo dydžio string poras buvo tikrinama, kaip dažnai vyksta kolizijos (lyginant 100,000 string porų):
 
@@ -156,8 +150,6 @@ Taip pat tikrinama, ar prie teksto pridėjus "salt" hash'ai yra neatpažįstami:
 "lietuva123" - a9736795a3387149c301d21683486963a473c6759324d418d44781687119a351
 "123lietuva" - f49283298251e328a185e438b341a6058442e772a310d753b418a412e110b470
 
-Atlikus paskutinį eksperimentą, matoma, kad ranka rašyta hash funkcija neatitinka reikalavimų. Pridėjus "salt", hasho pradžia išlieka ta pati. Šią funkciją reiktų tobulinti.
+Iš hash'ų matome, kad funkcija atitinka šį reikalavimą.
 
 ### Išvados
-
-Ranka rašyta hash funkcija nesudaro kolizijos, generuoja tokio pačio dydžio hash išvestis ir rodo lavinos efektą minimaliai pakeitus įvestį, tačiau "salt" pridėjimas parodė, kad tokia hash funkcija yra netinkama, kadangi ji nepakeičia hash'o pradžios pridėjus "salt".

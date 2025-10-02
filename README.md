@@ -155,3 +155,9 @@ Taip pat tikrinama, ar prie teksto pridėjus "salt" hash'ai yra neatpažįstami:
 "lietuva" - a9736795a3386904c394a68170556637a473c5799324d390d447812071199883
 "lietuva123" - a9736795a3387149c301d21683486963a473c6759324d418d44781687119a351
 "123lietuva" - f49283298251e328a185e438b341a6058442e772a310d753b418a412e110b470
+
+Atlikus paskutinį eksperimentą, matoma, kad ranka rašyta hash funkcija neatitinka reikalavimų. Pridėjus "salt", hasho pradžia išlieka ta pati. Šią funkciją reiktų tobulinti.
+
+### Išvados
+
+Ranka rašyta hash funkcija nesudaro kolizijos, generuoja tokio pačio dydžio hash išvestis ir rodo lavinos efektą minimaliai pakeitus įvestį, tačiau "salt" pridėjimas parodė, kad tokia hash funkcija yra netinkama, kadangi ji nepakeičia hash'o pradžios pridėjus "salt".

@@ -3,6 +3,9 @@
 #include <string>
 #include <bitset>
 #include <vector>
+#include <chrono>
+#include <limits>
+#include "timer.h"
 
 using namespace std;
 
@@ -10,7 +13,9 @@ string skaitytiFaila(string failas);
 string konvertuotiASCII(string tekstas);
 vector<int> paversti64(string tekstasASCII);
 int sudeti(string pirmas, string antras);
-void vertimas(vector<int> dalys);
+string vertimas(vector<int> dalys);
+string skaitytiKonst(int n);
+string sukurtiZodi(int n);
 
 int main(int argc, char **argv)
 {
@@ -26,17 +31,64 @@ int main(int argc, char **argv)
     }
     else if (argc == 1)
     {
-        string a;
-        cout << "iveskite teksta, kuri norite uzsifruoti:" << endl;
-        getline(cin, a);
-        tekstas = a;
+        string ats;
+        cout << "tikrinti Konstitucija?" << endl;
+        cin >> ats;
+        if (ats == "t")
+        {
+            int num;
+            cout << "kiek eiluciu skaityti?" << endl;
+            cin >> num;
+            tekstas = skaitytiKonst(num);
+        }
+        cout << "tikrinti kolizijas?" << endl;
+        cin >> ats;
+        if (ats == "t")
+        {
+            srand(time(0));
+            int kolizijos = 0;
+
+            int n;
+            cout << "kokio ilgio string lyginti?" << endl;
+            cin >> n;
+
+            for (int i = 0; i < 100000; i++)
+            {
+                string s1 = sukurtiZodi(n);
+                string s2 = sukurtiZodi(n);
+
+                string k1 = konvertuotiASCII(s1);
+                string k2 = konvertuotiASCII(s2);
+
+                vector<int> d1 = paversti64(k1);
+                vector<int> d2 = paversti64(k2);
+
+                string h1 = vertimas(d1);
+                string h2 = vertimas(d2);
+
+                if (h1 == h2)
+                    kolizijos++;
+            }
+            cout << "koliziju skaicius: " << kolizijos << endl;
+        }
+        else
+        {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            string a;
+            cout << "iveskite teksta, kuri norite uzsifruoti:" << endl;
+            getline(cin, a);
+            tekstas = a;
+        }
     }
+    Timer t;
     string tekstasASCII = konvertuotiASCII(tekstas);
 
     vector<int> dalys = paversti64(tekstasASCII);
 
-    vertimas(dalys);
-
+    string ats = vertimas(dalys);
+    cout << ats << endl;
+    cout << "ilgis: " << ats.length() << endl;
+    cout << "praejes laikas: " << t.elapsed() << endl;
     return 0;
 }
 
@@ -103,7 +155,10 @@ vector<int> paversti64(string tekstasASCII)
         int skir = 8 - dalys.size();
         for (int i = 0; i < skir; i++)
         {
-            dalys.push_back("00000000");
+            string pad = to_string(tekstasASCII.length());
+            while (pad.length() < 8)
+                pad = "0" + pad;
+            dalys.push_back(pad);
         }
     }
 
@@ -122,8 +177,9 @@ int sudeti(string pirmas, string antras)
     return sum;
 }
 
-void vertimas(vector<int> dalys)
+string vertimas(vector<int> dalys)
 {
+    string salt = "asdfghjkl";
     for (int i = 0; i < 4; i++)
     {
         dalys[i] += i * 1234;
@@ -158,6 +214,11 @@ void vertimas(vector<int> dalys)
     for (int i = 0; i < 8; i++)
         dalys[i] ^= (dalys[(i + 1) % 8] >> (i + 3));
 
+    for (int i = 0; i < dalys.size(); i++)
+    {
+        dalys[i] ^= (int(salt[i % salt.size()]) << (i % 4));
+    }
+
     string ats = "";
     for (int i = 0; i < 8; i++)
     {
@@ -188,6 +249,30 @@ void vertimas(vector<int> dalys)
             }
         }
     }
-    cout << ats << endl;
-    cout << "ilgis: " << ats.length() << endl;
+    return ats;
+}
+
+string skaitytiKonst(int n)
+{
+    ifstream fd("konstitucija.txt");
+    string tekstas = "";
+    string eilute;
+    for (int i = 0; i < n; i++)
+    {
+        getline(fd, eilute);
+        tekstas.append(eilute);
+    }
+    return tekstas;
+}
+
+string sukurtiZodi(int n)
+{
+    static const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    string zodis = "";
+    for (int j = 0; j < n; j++)
+    {
+        zodis.push_back(chars[rand() % chars.size()]);
+    }
+    return zodis;
 }

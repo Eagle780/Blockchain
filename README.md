@@ -99,6 +99,9 @@ FOR kiekvienas simbolis input’e
     Pridėti ASCII reikšmę * 31 prie kito hash elemento → hash[(pos + 13) mod 32] = (hash[(pos + 13) mod 32] + c * 31) mod 256
 END FOR
 
+Atspausdinti hash masyvą kaip 64 simbolių ilgio hex eilutę
+```
+
 Norint įvertinti kodo efektyvumą, buvo atliekami eksperimentai.
 
 ## Eksperimentai
@@ -117,10 +120,10 @@ test3 -> hash: d258d027f6179573b086c372c092b973b3676763d9259401e553e9159461d327
 test4 -> hash: a0557569a5598650d36377918114b714a928f7657004e6409717c656d7177145
 
 Visi gauti hash'ai (naudojant ChatGPT):
-text1.txt file        -> hash: 333b032039bef039c6eb417c030c56591c782cd18c98698d18446fc3f02a7f93
-text2.txt file        -> hash: 32ab04ab717ca70af359dd70eb7f4b3a38860b6f065b290238d36667ec01e47b
+text1.txt file -> hash: 333b032039bef039c6eb417c030c56591c782cd18c98698d18446fc3f02a7f93
+text2.txt file -> hash: 32ab04ab717ca70af359dd70eb7f4b3a38860b6f065b290238d36667ec01e47b
 konstitucija.txt file -> hash: a68b86f57c42b9321bcbcc80c26ede09627675aa827b67b68fe4fdd06f2181fa
-text3.txt file        -> hash: cb1719b3fd6c50651a7d15513aed34a03ea506b14d461a642c8d0ac9fb49784f
+text3.txt file -> hash: cb1719b3fd6c50651a7d15513aed34a03ea506b14d461a642c8d0ac9fb49784f
 
 Kaip galima pastebėti žiūrint į hash'us, jie visi yra vienodo (64 simbolių) ilgio ir jie visi yra kardinaliai skirtingi.
 Paleidus programą kelisi kartus ir naudojant tuos pačius failus, gaunami hash'ai nesiskiria.
@@ -144,4 +147,3 @@ Taip pat tikrinama, ar prie teksto pridėjus "salt" hash'ai yra neatpažįstami:
 "lietuva" - a9736795a3386904c394a68170556637a473c5799324d390d447812071199883
 "lietuva123" - a9736795a3387149c301d21683486963a473c6759324d418d44781687119a351
 "123lietuva" - f49283298251e328a185e438b341a6058442e772a310d753b418a412e110b470
-```

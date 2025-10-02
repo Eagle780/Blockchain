@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     else if (argc == 1)
     {
         string ats;
-        /*
+        srand(time(0));
         cout << "tikrinti Konstitucija?" << endl;
         cin >> ats;
         if (ats == "t")
@@ -44,29 +44,30 @@ int main(int argc, char **argv)
             cin >> num;
             tekstas = skaitytiKonst(num);
         }
+        else
+        {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            string a;
+            cout << "iveskite teksta, kuri norite uzsifruoti:" << endl;
+            getline(cin, a);
+            tekstas = a;
+        }
         cout << "tikrinti kolizijas?" << endl;
         cin >> ats;
         if (ats == "t")
         {
-            srand(time(0));
             int n;
             cout << "kokio ilgio string lyginti?" << endl;
             cin >> n;
 
             kolizijos(n);
         }
-            */
         cout << "tikrinti lavinos efekta?" << endl;
         cin >> ats;
         if (ats == "t")
         {
             lavinosEfektas();
         }
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        string a;
-        cout << "iveskite teksta, kuri norite uzsifruoti:" << endl;
-        getline(cin, a);
-        tekstas = a;
     }
     Timer t;
     string tekstasASCII = konvertuotiASCII(tekstas);
@@ -102,6 +103,7 @@ string konvertuotiASCII(string tekstas)
         char x = tekstas.at(i);
         tekstasASCII.append(to_string(int(x)));
     }
+    tekstasASCII = to_string(tekstasASCII.length()) + to_string(tekstasASCII.length() - 1) + to_string(tekstasASCII.length() - 2) + tekstasASCII;
     return tekstasASCII;
 }
 
@@ -167,6 +169,14 @@ int sudeti(string pirmas, string antras)
 string vertimas(vector<int> dalys)
 {
     string salt = "asdfghjkl";
+    for (int i = 0; i < 8; i++)
+    {
+        dalys[0] += dalys[i];
+        if (dalys[0] / 100000000 >= 1)
+        {
+            dalys[0] = dalys[0] % 100000000;
+        }
+    }
     for (int i = 0; i < 4; i++)
     {
         dalys[i] += i * 1234;
@@ -179,7 +189,7 @@ string vertimas(vector<int> dalys)
     }
     for (int i = 0; i < 8; i++)
     {
-        dalys[i] += dalys[1];
+        dalys[i] += dalys[0];
         dalys[i] = dalys[i] / (i % 4 + 1);
     }
     for (int i = 0; i < 8; i++)
@@ -306,24 +316,8 @@ void lavinosEfektas()
         string k1 = konvertuotiASCII(s1);
         string k2 = konvertuotiASCII(s2);
 
-        cout << "ascii:" << endl;
-        cout << k1 << endl;
-        cout << k2 << endl;
-
         vector<int> d1 = paversti64(k1);
         vector<int> d2 = paversti64(k2);
-
-        cout << "perversti:" << endl;
-        for (int j = 0; j < 8; j++)
-        {
-            cout << d1[j];
-        }
-        cout << endl;
-        for (int j = 0; j < 8; j++)
-        {
-            cout << d2[j];
-        }
-        cout << endl;
 
         string h1 = vertimas(d1);
         string h2 = vertimas(d2);

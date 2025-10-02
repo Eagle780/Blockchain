@@ -16,6 +16,8 @@ int sudeti(string pirmas, string antras);
 string vertimas(vector<int> dalys);
 string skaitytiKonst(int n);
 string sukurtiZodi(int n);
+void kolizijos(int n);
+void lavinosEfektas();
 
 int main(int argc, char **argv)
 {
@@ -32,6 +34,7 @@ int main(int argc, char **argv)
     else if (argc == 1)
     {
         string ats;
+        /*
         cout << "tikrinti Konstitucija?" << endl;
         cin >> ats;
         if (ats == "t")
@@ -46,39 +49,24 @@ int main(int argc, char **argv)
         if (ats == "t")
         {
             srand(time(0));
-            int kolizijos = 0;
-
             int n;
             cout << "kokio ilgio string lyginti?" << endl;
             cin >> n;
 
-            for (int i = 0; i < 100000; i++)
-            {
-                string s1 = sukurtiZodi(n);
-                string s2 = sukurtiZodi(n);
-
-                string k1 = konvertuotiASCII(s1);
-                string k2 = konvertuotiASCII(s2);
-
-                vector<int> d1 = paversti64(k1);
-                vector<int> d2 = paversti64(k2);
-
-                string h1 = vertimas(d1);
-                string h2 = vertimas(d2);
-
-                if (h1 == h2)
-                    kolizijos++;
-            }
-            cout << "koliziju skaicius: " << kolizijos << endl;
+            kolizijos(n);
         }
-        else
+            */
+        cout << "tikrinti lavinos efekta?" << endl;
+        cin >> ats;
+        if (ats == "t")
         {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            string a;
-            cout << "iveskite teksta, kuri norite uzsifruoti:" << endl;
-            getline(cin, a);
-            tekstas = a;
+            lavinosEfektas();
         }
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        string a;
+        cout << "iveskite teksta, kuri norite uzsifruoti:" << endl;
+        getline(cin, a);
+        tekstas = a;
     }
     Timer t;
     string tekstasASCII = konvertuotiASCII(tekstas);
@@ -138,17 +126,16 @@ vector<int> paversti64(string tekstasASCII)
         int skir = dalys.size() - 8;
         for (int i = 0; i < skir; i++)
         {
-            int sum = sudeti(dalys[i], dalys[i + 8]);
+            int sum = sudeti(dalys[i], dalys[8]);
             string naujas = to_string(sum);
             dalys[i] = naujas;
+            dalys.erase(dalys.begin() + 8);
             if (i == 7)
             {
                 skir -= 8;
-                i == 0;
+                i = -1;
             }
         }
-        for (int i = 0; i < skir; i++)
-            dalys.pop_back();
     }
     else if (dalys.size() < 8)
     {
@@ -275,4 +262,85 @@ string sukurtiZodi(int n)
         zodis.push_back(chars[rand() % chars.size()]);
     }
     return zodis;
+}
+
+void kolizijos(int n)
+{
+    int kolizijos = 0;
+    for (int i = 0; i < 100000; i++)
+    {
+        string s1 = sukurtiZodi(n);
+        string s2 = sukurtiZodi(n);
+
+        string k1 = konvertuotiASCII(s1);
+        string k2 = konvertuotiASCII(s2);
+
+        vector<int> d1 = paversti64(k1);
+        vector<int> d2 = paversti64(k2);
+
+        string h1 = vertimas(d1);
+        string h2 = vertimas(d2);
+
+        if (h1 == h2)
+            kolizijos++;
+    }
+    cout << "koliziju skaicius: " << kolizijos << endl;
+}
+
+void lavinosEfektas()
+{
+    for (int i = 0; i < 1; i++)
+    {
+        string s1 = sukurtiZodi(100);
+        string s2 = s1;
+        static const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        while (s1[s1.length() - 1] == s2[s2.length() - 1])
+        {
+            s2[s2.length() - 1] = chars[rand() % chars.size()];
+        }
+
+        cout << "---" << endl;
+        cout << s1 << endl;
+        cout << s2 << endl;
+
+        string k1 = konvertuotiASCII(s1);
+        string k2 = konvertuotiASCII(s2);
+
+        cout << "ascii:" << endl;
+        cout << k1 << endl;
+        cout << k2 << endl;
+
+        vector<int> d1 = paversti64(k1);
+        vector<int> d2 = paversti64(k2);
+
+        cout << "perversti:" << endl;
+        for (int j = 0; j < 8; j++)
+        {
+            cout << d1[j];
+        }
+        cout << endl;
+        for (int j = 0; j < 8; j++)
+        {
+            cout << d2[j];
+        }
+        cout << endl;
+
+        string h1 = vertimas(d1);
+        string h2 = vertimas(d2);
+
+        cout << "hashai:" << endl;
+        cout << h1 << endl;
+        cout << h2 << endl;
+
+        float proc = 0;
+        for (int j = 0; j < 64; j++)
+        {
+            if (h1[j] == h2[j])
+            {
+                proc++;
+            }
+        }
+        proc = proc / 64.0 * 100.0;
+        cout << "dvieju hash'u panasumas: " << proc << endl;
+    }
 }

@@ -114,15 +114,23 @@ Buvo testuojami 4 failai:
 - tuščias failas (test4).
 
 Visi gauti hash'ai (rašant ranka):
+
 test1 -> hash: f3587667a5157493d378b3648104a834b005b2807038c5409704d270d742f444
+
 test2 -> hash: f5029677a4597276c93164769352a7117566c284f02885588693d693d579f315
+
 test3 -> hash: d258d027f6179573b086c372c092b973b3676763d9259401e553e9159461d327
+
 test4 -> hash: a0557569a5598650d36377918114b714a928f7657004e6409717c656d7177145
 
 Visi gauti hash'ai (naudojant ChatGPT):
+
 text1.txt file -> hash: 333b032039bef039c6eb417c030c56591c782cd18c98698d18446fc3f02a7f93
+
 text2.txt file -> hash: 32ab04ab717ca70af359dd70eb7f4b3a38860b6f065b290238d36667ec01e47b
+
 konstitucija.txt file -> hash: a68b86f57c42b9321bcbcc80c26ede09627675aa827b67b68fe4fdd06f2181fa
+
 text3.txt file -> hash: cb1719b3fd6c50651a7d15513aed34a03ea506b14d461a642c8d0ac9fb49784f
 
 Kaip galima pastebėti žiūrint į hash'us, jie visi yra vienodo (64 simbolių) ilgio ir jie visi yra kardinaliai skirtingi.

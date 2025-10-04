@@ -5,6 +5,7 @@
 #include <vector>
 #include <chrono>
 #include <limits>
+#include <ctype.h>
 #include "timer.h"
 
 using namespace std;
@@ -77,7 +78,7 @@ int main(int argc, char **argv)
     string ats = vertimas(dalys);
     cout << ats << endl;
     cout << "ilgis: " << ats.length() << endl;
-    cout << "praejes laikas: " << t.elapsed() << endl;
+    cout << "praejes laikas: " << t.elapsed() * 1000 << endl;
     return 0;
 }
 
@@ -199,13 +200,9 @@ string vertimas(vector<int> dalys)
     }
     for (int i = 0; i < 8; i++)
     {
-        while (dalys[i] / 100000000 >= 1)
+        if (dalys[i] / 100000000 >= 1)
         {
             dalys[i] = dalys[i] % 100000000;
-        }
-        while (dalys[i] / 10000000 == 0)
-        {
-            dalys[i] = dalys[i] * 10;
         }
     }
     for (int i = 0; i < 8; i++)
@@ -214,6 +211,13 @@ string vertimas(vector<int> dalys)
     for (int i = 0; i < dalys.size(); i++)
     {
         dalys[i] ^= (int(salt[i % salt.size()]) << (i % 4));
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        while (dalys[i] / 10000000 == 0)
+        {
+            dalys[i] = dalys[i] * 10;
+        }
     }
 
     string ats = "";
@@ -242,6 +246,12 @@ string vertimas(vector<int> dalys)
             }
             else
             {
+                if (dalis[j] == 0)
+                {
+                    cout << "dalis[j] = " << dalis[j] << endl;
+                    cout << "jis yra " << i + 1 << " narys" << endl;
+                    cout << dalis << endl;
+                }
                 ats.append(to_string(dalis[j] - 48));
             }
         }
@@ -299,9 +309,12 @@ void kolizijos(int n)
 
 void lavinosEfektas()
 {
-    for (int i = 0; i < 1; i++)
+    float procmax = 0, procbimax = 0;
+    float procmin = 100, procbimin = 100;
+    float procsum = 0, procbisum = 0;
+    for (int i = 0; i < 100000; i++)
     {
-        string s1 = sukurtiZodi(100);
+        string s1 = sukurtiZodi(1001);
         string s2 = s1;
         static const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         while (s1[s1.length() - 1] == s2[s2.length() - 1])
@@ -309,9 +322,7 @@ void lavinosEfektas()
             s2[s2.length() - 1] = chars[rand() % chars.size()];
         }
 
-        cout << "---" << endl;
-        cout << s1 << endl;
-        cout << s2 << endl;
+        char a = s1[0];
 
         string k1 = konvertuotiASCII(s1);
         string k2 = konvertuotiASCII(s2);
@@ -322,19 +333,86 @@ void lavinosEfektas()
         string h1 = vertimas(d1);
         string h2 = vertimas(d2);
 
+        /*
         cout << "hashai:" << endl;
         cout << h1 << endl;
         cout << h2 << endl;
+        */
 
         float proc = 0;
+        float procbi = 0;
         for (int j = 0; j < 64; j++)
         {
+
+            string bi1;
+            string bi2;
+
+            if (isdigit(h1[j]))
+            {
+                bi1 = bitset<4>(h1[j]).to_string();
+            }
+            else if (!isdigit(h1[j]))
+            {
+                bi1 = bitset<4>((int(h1[j]) - 87)).to_string();
+            }
+
+            if (isdigit(h2[j]))
+            {
+                bi2 = bitset<4>(h2[j]).to_string();
+            }
+            else if (!isdigit(h2[j]))
+            {
+                bi2 = bitset<4>((int(h2[j]) - 87)).to_string();
+            }
+            // cout << h1[j] << " = " << bi1 << " " << h2[j] << " = " << bi2 << endl;
+            for (int k = 0; k < 4; k++)
+            {
+                if (bi1[k] == bi2[k])
+                {
+                    procbi++;
+                }
+            }
+
             if (h1[j] == h2[j])
             {
                 proc++;
             }
         }
         proc = proc / 64.0 * 100.0;
-        cout << "dvieju hash'u panasumas: " << proc << endl;
+        procbi = procbi / 256.0 * 100.0;
+
+        if (proc == 100)
+        {
+            cout << "s1" << s1 << endl;
+            cout << "hashas: " << h1 << endl;
+            cout << "s2" << s2 << endl;
+            cout << "hashas: " << h2 << endl;
+        }
+
+        if (proc > procmax)
+        {
+            procmax = proc;
+        }
+        if (procbi > procbimax)
+        {
+            procbimax = procbi;
+        }
+        if (proc < procmin)
+        {
+            procmin = proc;
+        }
+        if (procbi < procbimin)
+        {
+            procbimin = procbi;
+        }
+        procsum += proc;
+        procbisum += procbi;
+        // cout << "dvieju hash'u skirtumas(hex) : " << 100.0 - proc << "%" << endl;
+        // cout << "dvieju hash'u skirtumas(bi) : " << 100.0 - procbi << "%" << endl;
     }
+    cout << "procmax: " << procmax << " procbimax: " << procbimax << endl;
+    cout << "procmin: " << procmin << " procbimin: " << procbimin << endl;
+    procsum = procsum / 100000.0;
+    procbisum = procbisum / 100000.0;
+    cout << "procsum: " << procsum << " procbisum: " << procbisum << endl;
 }
